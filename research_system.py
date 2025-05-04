@@ -31,9 +31,8 @@ brave_search_mcp_server = MCPServerStdio(
 )
 
 # Researcher Agent (Agent A)
-research_agent = Agent[None, ResearchAnswer](
+research_agent = Agent(
     model = "openai:gpt-4o",
-    output_type=ResearchAnswer,
     system_prompt=(
     """
     You are a research assistant. Answer the user's research question as thoroughly as possible. You may use the tavily MCP tool to gather additional information from the web.
@@ -55,14 +54,12 @@ research_agent = Agent[None, ResearchAnswer](
 
 
 # Evaluator Agent (Agent B)
-evaluator_agent = Agent[ResearchAnswer, Feedback](
+evaluator_agent = Agent(
     model = "openai:gpt-4o",
-    deps_type=ResearchAnswer,
     output_type=Feedback,
     system_prompt=(
         """
-        You are an evaluator. Given the proposed answer, decide if it fully addresses the research question
-        Respond with JSON matching the Feedback model: {'accepted': bool, 'comments': str}.
+        You are an evaluator. Given the proposed answer, decide if it fully addresses the research question.
         If the answer is incomplete or unclear, set 'accepted' to false and provide constructive feedback.
         """
     ),

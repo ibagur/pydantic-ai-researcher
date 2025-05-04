@@ -43,7 +43,7 @@ MAX_ITERATIONS = 5
 #         print(f"Failed to converge within {max_iterations} iterations.")
 #         return None
 
-async def run_research_loop(question: str, max_iterations: int = MAX_ITERATIONS) -> Optional[ResearchAnswer]:
+async def run_research_loop(question: str, max_iterations: int = MAX_ITERATIONS):
     """
     Runs the evaluator-optimizer loop for a research question.
 
@@ -59,16 +59,17 @@ async def run_research_loop(question: str, max_iterations: int = MAX_ITERATIONS)
     current_answer = await research_agent.run(question)
     for i in range(max_iterations):
         # Agent B evaluates the answer
-        feedback_prompt = format_as_xml({'answer_to_evaluate': current_answer.output})
+        feedback_prompt = current_answer.output
         feedback = await evaluator_agent.run(feedback_prompt)
+        print(f"Feedback received: {feedback.output.accepted}")
         if feedback.output.accepted:
             print(f"Accepted on iteration {i+1}:")
-            print(current_answer.output.text)
-            return current_answer.output
+            print(f"Answer: {current_answer.output}")
+            return
         # Prepare improved answer prompt for Agent A
         improvement_prompt = (
             f"Improve this answer based on the following feedback:\n"
-            f"Previous answer: {current_answer.output.text}\n"
+            f"Previous answer: {current_answer.output}\n"
             f"Feedback: {feedback.output.comments}"
         )
         current_answer = await research_agent.run(improvement_prompt)
