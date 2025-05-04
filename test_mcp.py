@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 import asyncio
 import os
 
-
 load_dotenv()
 
 brave_search_mcp_server = MCPServerStdio(
