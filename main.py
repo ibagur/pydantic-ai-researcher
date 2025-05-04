@@ -18,11 +18,12 @@ async def run_research_loop(max_iterations: int = MAX_ITERATIONS):
 
 # Initial answer from Agent A
     async with research_agent.run_mcp_servers():
+        history = []
         while True:
             command = input("You: ")
             if command == "exit":
                 break
-            current_answer = await research_agent.run(command)
+            current_answer = await research_agent.run(command, message_history=history)
             for i in range(max_iterations):
                 # Agent B evaluates the answer
                 feedback_prompt = current_answer.output
@@ -31,6 +32,7 @@ async def run_research_loop(max_iterations: int = MAX_ITERATIONS):
                 if feedback.output.accepted:
                     print(f"Accepted on iteration {i+1}:")
                     print(f"Answer: {current_answer.output}")
+                    history += current_answer.new_messages()
                     return
                 # Prepare improved answer prompt for Agent A
                 improvement_prompt = (
