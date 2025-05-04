@@ -61,7 +61,7 @@ async def run_research_loop(question: str, max_iterations: int = MAX_ITERATIONS)
         # Agent B evaluates the answer
         feedback_prompt = current_answer.output
         feedback = await evaluator_agent.run(feedback_prompt)
-        print(f"Feedback received: {feedback.output.accepted}")
+        print(f"Feedback received: {feedback.output}")
         if feedback.output.accepted:
             print(f"Accepted on iteration {i+1}:")
             print(f"Answer: {current_answer.output}")
