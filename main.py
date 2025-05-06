@@ -1,6 +1,13 @@
+"""
+Module: main.py
+Description: This script configures logfire and sets up an asynchronous research loop that interacts with research and evaluator agents (defined in research_system.py). It prompts the user for input, processes research queries through a loop where Agent A (research_agent) provides an answer and Agent B (evaluator_agent) evaluates it, iterating until an acceptable answer is reached or the maximum iteration limit is exceeded.
+"""
 import asyncio
 from research_system import research_agent, evaluator_agent
-from typing import Optional
+import logfire
+
+logfire.configure()
+logfire.instrument_pydantic_ai()
 
 MAX_ITERATIONS = 5
 
@@ -9,7 +16,6 @@ async def run_research_loop(max_iterations: int = MAX_ITERATIONS):
     Runs the evaluator-optimizer loop for a research question.
 
     Args:
-        question (str): The research question to answer.
         max_iterations (int): Maximum number of iterations to attempt.
 
     Returns:
@@ -28,12 +34,12 @@ async def run_research_loop(max_iterations: int = MAX_ITERATIONS):
                 # Agent B evaluates the answer
                 feedback_prompt = current_answer.output
                 feedback = await evaluator_agent.run(feedback_prompt)
-                print(f"Feedback received: {feedback.output}")
+                print(f"Feedback {i+1} received: {feedback.output.accepted}")
                 if feedback.output.accepted:
                     print(f"Accepted on iteration {i+1}:")
                     print(f"Answer: {current_answer.output}")
                     history += current_answer.new_messages()
-                    return
+                    break
                 # Prepare improved answer prompt for Agent A
                 improvement_prompt = (
                     f"Improve this answer based on the following feedback:\n"
@@ -41,8 +47,11 @@ async def run_research_loop(max_iterations: int = MAX_ITERATIONS):
                     f"Feedback: {feedback.output.comments}"
                 )
                 current_answer = await research_agent.run(improvement_prompt)
-            print(f"Failed to converge within {max_iterations} iterations.")
-            return None
+            # Check if loop finished AND last feedback wasn't accepted
+            if i == max_iterations - 1 and not feedback.output.accepted: 
+                 print(f"Failed to converge within {max_iterations} iterations.")
+            # print(f"Failed to converge within {max_iterations} iterations.")
+            # return None
 
 
 if __name__ == "__main__":

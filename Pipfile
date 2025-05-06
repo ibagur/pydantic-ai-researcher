@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 pytest = "*"
 pydantic-ai = {extras = ["mcp"], version = "*"}
+logfire = "*"
 
 [dev-packages]
 

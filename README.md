@@ -1,106 +1,57 @@
-# Pydantic-AI Researcher Multi-Agent System
+# pydantic-ai-researcher
 
-## Overview
-
-This project implements a simple multi-agent research system using [Pydantic-AI](https://github.com/pydantic/pydantic-ai). The system follows an **evaluator-optimizer workflow**:
-- **Agent A (Researcher/Optimizer):** Generates answers to user research questions, using web search tools for up-to-date information.
-- **Agent B (Evaluator):** Evaluates Agent A's answers, providing structured feedback until the answer is accepted or a maximum number of iterations is reached.
-
-The system is modular, type-safe, and easily extensible for new tools or evaluation criteria.
-
----
+## Description
+pydantic-ai-researcher is a research system that orchestrates an asynchronous loop between two specialized agents: a research agent and an evaluator agent. The research agent answers complex queries using external MCP servers, while the evaluator agent assesses and refines these answers, iterating until a satisfactory response is attained.
 
 ## Features
+- **Asynchronous Research Loop**: Iterative evaluation and improvement of research answers.
+- **Dual Agent System**: Utilizes a research agent for data gathering and an evaluator agent for feedback.
+- **Pluggable MCP Servers**: Integrates with multiple MCP servers (Tavily, Brave Search, arXiv) for diverse data sources.
+- **Environment Configurable**: Uses environment variables and .env files for API key configuration.
+- **Easy Setup**: Straightforward installation via Pipfile or requirements.txt.
 
-- **Evaluator-Optimizer Loop:** Iterative improvement of answers based on feedback.
-- **Tavily Search Integration:** Agent A can use Tavily Search (via MCP) to gather real-time web knowledge.
-- **Pydantic Models:** All data is validated and structured using Pydantic.
-- **Iteration Limit:** Prevents infinite loops by enforcing a configurable maximum.
-- **Unit Tests:** Pytest suite covers expected, edge, and failure cases.
-
----
-
-## File Structure
-
-```
-.
-├── models.py              # Pydantic models for questions, answers, feedback
-├── tools.py               # Tavily Search tool integration
-├── research_system.py     # Agent definitions and tool registration
-├── main.py                # Orchestration loop and entrypoint
-├── tests/
-│   └── test_main.py       # Pytest unit tests
-├── TASK.md                # Project task tracking
-├── PLANNING.md            # Project architecture and design notes
-└── README.md              # This documentation
-```
-
----
-
-## Setup
-
-1. **Install Python 3.9+**  
-   Ensure you have Python 3.9 or newer installed.
-
-2. **Install dependencies**  
-   ```
-   pip install pydantic pydantic-ai pytest
-   ```
-   If using MCP tools, follow their setup instructions for authentication and API keys.
-
-3. **(Optional) Configure Tavily MCP**  
-   Replace the placeholder `tavily_mcp_tool` in `research_system.py` with the actual MCP tool integration for production use.
-
----
+## Installation / Setup
+1. **Prerequisites**: Ensure Python 3.x is installed.
+2. **Installation**:
+   - Using Pipenv:
+     ```bash
+     pipenv install
+     ```
+   - Or using pip:
+     ```bash
+     pip install -r requirements.txt
+     ```
+3. **Configuration**:
+   - Create a `.env` file at the project root.
+   - Define the required environment variables:
+     - `OPENAI_API_KEY`
+     - `TAVILY_API_KEY`
+     - `BRAVE_API_KEY`
+   - (Other API endpoints may also need to be defined as needed.)
 
 ## Usage
-
-To run the system with a sample research question:
-
+Run the project by executing the following command:
 ```bash
 python main.py
 ```
+Type your research queries in the interactive prompt. To exit the program, type `exit`.
 
-- By default, the system will answer "What are the main causes of climate change?".
-- To customize, modify the `user_question` variable in `main.py` or adapt the script for CLI input.
+## Architecture
+The system implements a two-agent evaluator-optimizer loop:
+- **Agent A (Research Agent)**: Generates initial answers to research queries using external data sources via MCP servers.
+- **Agent B (Evaluator Agent)**: Evaluates the answers provided by Agent A and offers feedback for improvement.
+- **Loop Mechanism**: The system iterates through multiple cycles of evaluation until an answer is accepted or the maximum iteration limit is reached.
 
----
+Below is the workflow diagram illustrating the evaluator-optimizer process:
 
-## Testing
+![Evaluator-Optimizer Workflow](docs/evaluator-optimizer%20workflow.webp)
 
-Run the unit tests with:
+## Configuration
+The project configuration relies on environment variables loaded via `python-dotenv`. Ensure that:
+- `OPENAI_API_KEY` is set for the OpenAI model usage.
+- `TAVILY_API_KEY` is set for accessing Tavily MCP Search.
+- `BRAVE_API_KEY` is set for using Brave Search MCP.
+- Additional configuration for arXiv MCP may be defined as needed.
 
-```bash
-pytest tests/
-```
-
-Tests use mocks to simulate agent/tool behavior and cover:
-- Acceptance on first try
-- Iteration limit reached
-- Acceptance after improvement
-
----
-
-## Extending the System
-
-- **Add new tools:** Implement and register new tools in `tools.py` and with the researcher agent.
-- **Change evaluation criteria:** Modify the evaluator agent's system prompt or feedback model.
-- **Integrate other search providers:** Add wrappers for other MCP tools as needed.
-
----
-
-## Acknowledgements
-
-- [Pydantic-AI](https://github.com/pydantic/pydantic-ai) for agent framework and type safety.
-- [Tavily Search MCP](https://github.com/tavily-ai/tavily-mcp) for web search integration.
-
----
-
-## Further Resources
-
-- See `PLANNING.md` for architecture and design details.
-- See `TASK.md` for project progress and TODOs.
-
----
-
-*For questions or contributions, please open an issue or pull request!*
+## Contributing / License
+Contributions are welcome. Please submit issues and pull requests for bug fixes, improvements, or new features. Refer to the project's [LICENSE](LICENSE) file for licensing details.
