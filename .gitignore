@@ -3,3 +3,5 @@
 # Ignore CLI rules directories
 **/.clinerules/
 **/.clinerules-bank/
+Pipfile
+Pipfile.lock
