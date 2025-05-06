@@ -46,7 +46,7 @@ Below is the workflow diagram illustrating the evaluator-optimizer process:
 
 ![ evaluator-optimizer-workflow](./docs/evaluator-optimizer-workflow.png)
 
-Source: [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents))
+Source: [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)
 
 ## Configuration
 
