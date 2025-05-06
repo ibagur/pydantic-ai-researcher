@@ -1,5 +1,5 @@
 **/.claude/settings.local.json
 
 # Ignore CLI rules directories
-.clinerules/
-.clinerules-bank/
+.clinerules/*
+.clinerules-bank/*
