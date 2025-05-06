@@ -44,9 +44,12 @@ The system implements a two-agent evaluator-optimizer loop:
 
 Below is the workflow diagram illustrating the evaluator-optimizer process:
 
-![Evaluator-Optimizer Workflow](docs/evaluator-optimizer%20workflow.webp)
+![ evaluator-optimizer-workflow](./docs/evaluator-optimizer-workflow.png)
+
+Source: [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents))
 
 ## Configuration
+
 The project configuration relies on environment variables loaded via `python-dotenv`. Ensure that:
 - `OPENAI_API_KEY` is set for the OpenAI model usage.
 - `TAVILY_API_KEY` is set for accessing Tavily MCP Search.
